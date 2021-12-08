@@ -68,7 +68,6 @@
 //   }
 // };
 
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import UserModal from '../models/user.js';
@@ -120,6 +119,30 @@ export const signup = async (req, res) => {
     });
 
     res.status(201).json({ result, token });
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong' });
+
+    console.log(error);
+  }
+};
+export const updateProfile = async (req, res) => {
+  const { id } = req.params;
+  const { email, newPassword, username, image, bio } = req.body;
+
+  try {
+    const oldUser = await UserModal.findOne({ email });
+
+    if (oldUser)
+      return res.status(400).json({ message: 'User already exists' });
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(404).send(`No user with id: ${id}`);
+
+    const updatedUser = { newPassword, username, image, bio, _id: id };
+
+    await UserModal.findByIdAndUpdate(id, updatedPost, { new: true });
+
+    res.json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
 
