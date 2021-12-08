@@ -145,7 +145,7 @@ export const updateProfile = async (req, res) => {
 
     await UserModal.findByIdAndUpdate(id, updatedUser, { new: true });
 
-    res.json(updatedUser);
+    res.json({ result: updatedUser });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
 
