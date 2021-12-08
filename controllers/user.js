@@ -67,7 +67,8 @@
 //     console.log(error);
 //   }
 // };
-
+import express from 'express';
+import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
 import UserModal from '../models/user.js';
@@ -127,15 +128,22 @@ export const signup = async (req, res) => {
 };
 export const updateProfile = async (req, res) => {
   const { id } = req.params;
-  const { email, newPassword, username, image, bio } = req.body;
+  const { email, newpassword, username, url, about } = req.body;
 
   try {
     if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(404).send(`No user with id: ${id}`);
 
-    const updatedUser = { newPassword, username, image, bio, _id: id };
+    const updatedUser = {
+      email,
+      password: newpassword,
+      name: username,
+      image: url,
+      bio: about,
+      _id: id,
+    };
 
-    await UserModal.findByIdAndUpdate(id, updatedPost, { new: true });
+    await UserModal.findByIdAndUpdate(id, updatedUser, { new: true });
 
     res.json(updatedUser);
   } catch (error) {
