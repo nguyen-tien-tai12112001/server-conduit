@@ -130,11 +130,6 @@ export const updateProfile = async (req, res) => {
   const { email, newPassword, username, image, bio } = req.body;
 
   try {
-    const oldUser = await UserModal.findOne({ email });
-
-    if (oldUser)
-      return res.status(400).json({ message: 'User already exists' });
-
     if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(404).send(`No user with id: ${id}`);
 
