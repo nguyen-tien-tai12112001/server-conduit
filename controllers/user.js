@@ -115,9 +115,13 @@ export const signup = async (req, res) => {
       name: username,
     });
 
-    const token = jwt.sign({ email: result.email, id: result._id }, secret, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      { email: result.email, name: result.name, id: result._id },
+      secret,
+      {
+        expiresIn: '1h',
+      }
+    );
 
     res.status(201).json({ result, token });
   } catch (error) {
@@ -144,8 +148,20 @@ export const updateProfile = async (req, res) => {
     };
 
     await UserModal.findByIdAndUpdate(id, updatedUser, { new: true });
+    const token = jwt.sign(
+      {
+        email: updatedUser.email,
+        name: updatedUser.name,
+        image: updatedUser.image,
+        id: updatedUser._id,
+      },
+      secret,
+      {
+        expiresIn: '1h',
+      }
+    );
 
-    res.json({ result: updatedUser });
+    res.json({ result: updatedUser, token });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
 
