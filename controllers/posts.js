@@ -129,5 +129,16 @@ export const commentPost = async (req, res) => {
 
   res.json(updatedPost);
 };
+export const getPostByUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await PostMessage.find({ creator: id });
+    console.log('🚀 ~ file: posts.js ~ line 136 ~ getPostByUser ~ post', post);
+
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
 
 export default router;
